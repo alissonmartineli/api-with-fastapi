@@ -56,3 +56,16 @@ def create_todo(todo: Todo):
 
     todos.append(todo)
     return todo
+
+
+@app.put('/todos/{id}')
+def update_todo(id: int, todo: Todo):
+
+    search = list(filter(lambda x: x["id"] == id, todos))
+
+    if search == []:
+        raise HTTPException(status_code=404, detail="Todo not found")
+
+    search[0]['name'] = todo.name
+
+    return search[0]
