@@ -21,5 +21,9 @@ def hello_world():
 
 
 @app.get("/todos")
-def get_all():
-    return todos
+def get_item(name: Optional[str] = None):
+
+    if not name:
+        return todos
+
+    return list(filter(lambda x: name in x["name"], todos))
