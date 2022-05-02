@@ -69,3 +69,17 @@ def update_todo(id: int, todo: Todo):
     search[0]['name'] = todo.name
 
     return search[0]
+
+
+@app.delete('/todos/{id}')
+def delete_todo(id: int):
+    global todos
+
+    search = list(filter(lambda x: x["id"] == id, todos))
+
+    if search == []:
+        raise HTTPException(status_code=404, detail="Todo not found")
+
+    todos = list(filter(lambda x: x["id"] != id, todos))
+
+    return {'message': 'Todo deleted successfully'}
