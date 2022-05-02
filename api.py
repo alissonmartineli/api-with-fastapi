@@ -1,5 +1,5 @@
 from typing import Optional
-from fastapi import FastAPI, Path
+from fastapi import FastAPI, Path, HTTPException
 
 app = FastAPI()
 
@@ -21,9 +21,20 @@ def hello_world():
 
 
 @app.get("/todos")
-def get_item(name: Optional[str] = None):
+def get_all(name: Optional[str] = None):
 
     if not name:
         return todos
 
     return list(filter(lambda x: name in x["name"], todos))
+
+
+@app.get("/todos/{id}")
+def get_by_id(id: int = Path(None, description="The id of the todo you want to view")):
+
+    search = list(filter(lambda x: x["id"] == id, todos))
+
+    if search == []:
+        raise HTTPException(status_code=404, detail="Todo not found")
+
+    return search[0]
